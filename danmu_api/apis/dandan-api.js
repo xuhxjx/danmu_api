@@ -526,6 +526,10 @@ export async function searchAnime(url, preferAnimeId = null, preferSource = null
 async function searchAnimeBody(url, preferAnimeId = null, preferSource = null, detailStore = null, targetPlatform = null, forceRefresh = false) {
   let queryTitle = url.searchParams.get("keyword");
 
+  // 【在此处插入这3行】过滤你自定义的画质/帧率后缀
+  if (queryTitle) {
+    queryTitle = queryTitle.replace(/\(DV\)|\(HQ\)|\(HDR\)|\(HFR\)|\(SDR\)|\(4K\)|\(2K\)/gi, '').trim();
+  }
   // 搜索词杂音清理：移除画质/配音/版本等杂音词后再提交源站搜索
   if (globals.titleNoiseFilter) {
     queryTitle = queryTitle.replace(globals.titleNoiseFilter, '').trim();
@@ -1959,6 +1963,10 @@ async function executeMatchAttempt({ req, title, season, episode, year, preferre
 
 function normalizeMatchTitle(title) {
   let normalized = String(title || '').trim();
+    
+  // 【在此处插入这1行】过滤自定义后缀，提纯剧名给 API
+  normalized = normalized.replace(/\(DV\)|\(HQ\)|\(HDR\)|\(HFR\)|\(SDR\)|\(4K\)|\(2K\)/gi, '').trim();
+    
   if (globals.animeTitleSimplified) normalized = simplized(normalized);
   if (globals.titleNoiseFilter) normalized = normalized.replace(globals.titleNoiseFilter, '').trim();
   return normalized;
