@@ -1889,7 +1889,7 @@ function prepareQueryTitle(title) {
   let normalized = String(title || '').trim();
     
   // 【在此处插入这1行】过滤自定义后缀，提纯剧名给 API
-  normalized = normalized.replace(/\(DV\)|\(HQ\)|\(HDR\)|\(HFR\)|\(SDR\)|\(IQ\)|\(4K\)|\(2K\)/gi, '').trim();
+  normalized = normalized.replace(/\(DV\)|\(HQ\)|\(HHQ\)|\(HDR\)|\(HHDR\)|\(HFR\)|\(SDR\)|\(IQ\)|\(4K\)|\(2K\)/gi, '').trim();
     
   if (globals.animeTitleSimplified) normalized = simplized(normalized);
   if (globals.titleNoiseFilter) normalized = normalized.replace(globals.titleNoiseFilter, '').trim();
