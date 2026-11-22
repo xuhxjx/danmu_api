@@ -533,6 +533,11 @@ function resolveAnimeDetailForSearch(anime, requestAnimeDetailsMap) {
 async function searchAnimeBody(url, preferAnimeId = null, preferSource = null, detailStore = null, targetPlatform = null, forceRefresh = false) {
   let queryTitle = url.searchParams.get("keyword");
 
+  // 【在此处插入这3行】过滤你自定义的画质/帧率后缀
+  if (queryTitle) {
+    queryTitle = queryTitle.replace(/\(DV\)|\(HDV\)|\(HQ\)|\(HHQ\)|\(HDR\)|\(HHDR\)|\(HFR\)|\(ISO\)|\(SDR\)|\(Prue\)|\(IQ\)|\(4K\)|\(2K\)/gi, '').trim();
+  }
+
   // 搜索·缓存查询 阶段开始：本阶段内的配置读取与查询预处理统一归属到此，便于排错定位
   markStepActive('搜索·缓存查询');
   const cacheStartedAt = Date.now();
@@ -2276,6 +2281,8 @@ export function buildMatchScoring(platformAttempts, resAnime) {
 // 归一化查询标题；record 为真时登记繁转简与杂音清理的生效明细
 function prepareQueryTitle(title, record = false) {
   let normalized = String(title || '').trim();
+  // 【在此处插入这1行】过滤自定义后缀，提纯剧名给 API
+  normalized = normalized.replace(/\(DV\)|\(HDV\)|\(HQ\)|\(HHQ\)|\(HDR\)|\(HHDR\)|\(HFR\)|\(ISO\)|\(SDR\)|\(Prue\)|\(IQ\)|\(4K\)|\(2K\)/gi, '').trim();
   if (globals.animeTitleSimplified) {
     const simplified = simplized(normalized);
     if (record && simplified !== normalized) {
